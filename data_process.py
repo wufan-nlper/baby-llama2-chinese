@@ -1,15 +1,17 @@
 import json
 import glob
 import numpy as np
-from tqdm import tqdm
-from chatglm_tokenizer.tokenization_chatglm import ChatGLMTokenizer
 import pandas as pd
 
-# from zhconv import convert
+from tqdm import tqdm
+from chatglm_tokenizer.tokenization_chatglm import ChatGLMTokenizer
 
 
-def process_wiki_clean():
-    with open("/disk/wufan/gpt_data/wikipedia-cn-20230720-filtered.json", "r") as f:
+tokenizer = ChatGLMTokenizer(vocab_file="./chatglm_tokenizer/tokenizer.model")
+
+
+def process_wiki_clean(json_p, bin_p):
+    with open(json_p, "r") as f:
         data = json.load(f)
     doc_ids = []
     for line in tqdm(data):
@@ -19,12 +21,12 @@ def process_wiki_clean():
         if len(text_id) > 5:
             doc_ids += text_id
     arr = np.array(doc_ids, dtype=np.uint16)
-    with open("/disk/wufan/gpt_data/wiki.bin", "wb") as f:
+    with open(bin_p, "wb") as f:
         f.write(arr.tobytes())
 
 
-def process_medical(data_path, name):
-    f = open(data_path, "r")
+def process_medical(json_p, bin_p):
+    f = open(json_p, "r")
     doc_ids = []
     while True:
         line = f.readline()
@@ -37,7 +39,7 @@ def process_medical(data_path, name):
         if len(text_id) > 5:
             doc_ids += text_id
     arr = np.array(doc_ids, dtype=np.uint16)
-    with open("/disk/wufan/gpt_data/medical_{}.bin".format(name), "wb") as f:
+    with open(bin_p, "wb") as f:
         f.write(arr.tobytes())
 
 
@@ -110,8 +112,8 @@ def sft_process():
     print(df)
 
 
-def process_baidu():
-    f = open("/disk/wufan/gpt_data/563w_baidubaike.json", "r")
+def process_baidu(json_p, bin_p):
+    f = open(json_p, "r")
     cnt = 0
     token = 0
     doc_ids = []
@@ -137,12 +139,12 @@ def process_baidu():
 
     arr = np.array(doc_ids, dtype=np.uint16)
     print(arr.shape)
-    with open("/disk/wufan/gpt_data/baidubaike_563w.bin", "wb") as f:
+    with open(bin_p, "wb") as f:
         f.write(arr.tobytes())
 
 
 if __name__ == "__main__":
-    tokenizer = ChatGLMTokenizer(vocab_file="./chatglm_tokenizer/tokenizer.model")
+    pass
     process_wiki_clean()
     process_medical("/disk/wufan/gpt_data/medical_book_zh.json", "book")
     process_medical("/disk/wufan/gpt_data/train_encyclopedia.json", "encyclopedia")
@@ -150,9 +152,9 @@ if __name__ == "__main__":
     sft_process()
     # process_baidu()
     data_path_list = [
-        # '/disk/wufan/gpt_data/baidubaike_563w.bin',
+        "/disk/wufan/gpt_data/baidubaike_563w.bin",
         "/disk/wufan/gpt_data/medical_book.bin",
-        "/disk/wufan/gpt_data/medical_encyclopedia.bin",
+        # "/disk/wufan/gpt_data/medical_encyclopedia.bin",
         "/disk/wufan/gpt_data/wiki.bin",
     ]
     data_lst = []
