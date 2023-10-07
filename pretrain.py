@@ -288,7 +288,7 @@ if __name__ == "__main__":
         # './data/wiki.bin'
     ]
     train_ds = PretrainDataset(data_path_list, max_length=max_seq_len, memmap=True)
-    train_sampler = torch.utils.data.distributed.DistributedSampler(train_ds)
+    train_sampler = torch.utils.data.distributed.DistributedSampler(train_ds) if ddp else torch.utils.data.Sampler(train_ds)
     train_loader = torch.utils.data.DataLoader(
         train_ds,
         batch_size=batch_size,
