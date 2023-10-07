@@ -280,7 +280,7 @@ if __name__ == "__main__":
     #
     # -----init dataloader------
     data_path_list = [
-        "./data/pretrain_data.bin"
+        "/disk/wufan/gpt_data/pretrain_data.bin"
         #'./data/baidubaike_563w.bin',
         #'./data/medical_book.bin',
         # './data/medical_encyclopedia.bin',

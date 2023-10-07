@@ -88,6 +88,7 @@ def repeat_kv(x: torch.Tensor, n_rep: int) -> torch.Tensor:
         .expand(bs, slen, n_kv_heads, n_rep, head_dim)
         .reshape(bs, slen, n_kv_heads * n_rep, head_dim)
     )
+    # return torch.repeat_interleave(input=x, dim=2, repeats=n_rep)
 
 
 class Attention(nn.Module):
