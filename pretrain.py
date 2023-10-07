@@ -212,7 +212,7 @@ if __name__ == "__main__":
     # system
     device = "cuda"  # examples: 'cpu', 'cuda', 'cuda:0', 'cuda:1' etc., or try 'mps' on macbooks
     dtype = "float16"  # 'float32', 'bfloat16', or 'float16', the latter will auto implement a GradScaler
-    compile = False  # use PyTorch 2.0 to compile the model to be faster
+    compile = True  # use PyTorch 2.0 to compile the model to be faster
     # -----------------------------------------------------------------------------
     config_keys = [
         k
@@ -288,7 +288,7 @@ if __name__ == "__main__":
         # './data/wiki.bin'
     ]
     train_ds = PretrainDataset(data_path_list, max_length=max_seq_len, memmap=True)
-    train_sampler = torch.utils.data.distributed.DistributedSampler(train_ds) if ddp else torch.utils.data.Sampler(train_ds)
+    train_sampler = torch.utils.data.distributed.DistributedSampler(train_ds) if ddp else torch.utils.data.SequentialSampler(train_ds)
     train_loader = torch.utils.data.DataLoader(
         train_ds,
         batch_size=batch_size,
