@@ -89,7 +89,7 @@ def train_epoch(epoch):
             spend_time = time.time() - start_time
             logger.info(
                 "Epoch:[{}/{}]({}/{}) loss:{:.3f} lr:{:.7f} epoch_Time:{}min:".format(
-                    epoch,
+                    epoch + 1,
                     max_epoch,
                     step,
                     iter_per_epoch,
@@ -180,7 +180,7 @@ if __name__ == "__main__":
     out_dir = "out"
     max_epoch = 2
     eval_interval = 1
-    log_interval = 100
+    log_interval = 1000
     eval_iters = 200
     eval_only = False  # if True, script exits right after the first eval
     always_save_checkpoint = True  # if True, always save a checkpoint after each eval
@@ -341,10 +341,10 @@ if __name__ == "__main__":
     for epoch in range(max_epoch):
         train_epoch(epoch)
         # val_loss=valid_epoch(epoch)
-        if torch.distributed.get_rank() == 0:  # 一般用0，当然，可以选任意的rank保存。
+        # if torch.distributed.get_rank() == 0:  # 一般用0，当然，可以选任意的rank保存。
             #
-            torch.save(
-                raw_model.state_dict(), "{}/epoch_{}.pth".format(save_dir, epoch)
-            )
+        torch.save(
+            raw_model.state_dict(), "{}/epoch_{}.pth".format(save_dir, epoch)
+        )
     if ddp:
         destroy_process_group()
